@@ -1,0 +1,16 @@
+[
+  {
+    "modid": "narutorigins",
+    "name": "Naruto Origin Mod",
+    "description": "A mod that simulates Naruto character traits",
+    "version": "1.0",
+    "mcversion": "1.12.2",
+    "url": "",
+    "updateUrl": "",
+    "authorList": ["Your Name"],
+    "credits": "Thanks to the Naruto series",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
