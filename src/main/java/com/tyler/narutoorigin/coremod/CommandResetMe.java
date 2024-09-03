@@ -1,5 +1,6 @@
 package com.tyler.narutoorigin.coremod;
 
+import com.tyler.narutoorigin.config.NarutoOriginsConfig;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -37,8 +38,9 @@ public class CommandResetMe extends CommandBase {
         return true; // Erlaubt es jedem Spieler, den Befehl auszuführen
     }
 
-    @Override
-    public int getRequiredPermissionLevel() {
-        return 0; // Setzt das erforderliche Berechtigungslevel auf 0, was bedeutet, dass keine Admin-Rechte erforderlich sind
-    }
+ @Override
+public int getRequiredPermissionLevel() {
+    return 0; // Jeder kann dieses Kommando ausführen
+}
+
 }

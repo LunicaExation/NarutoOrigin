@@ -1,5 +1,6 @@
 package com.tyler.narutoorigin.coremod;
 
+import com.tyler.narutoorigin.config.NarutoOriginsConfig;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -48,11 +49,11 @@ public class CommandDoItForMe extends CommandBase {
         return true;
     }
 
-    @Override
-    public int getRequiredPermissionLevel() {
-        // Setze das Berechtigungslevel auf 0, damit jeder den Befehl ausführen kann
-        return 0;
-    }
+   @Override
+public int getRequiredPermissionLevel() {
+    return 0; // Jeder kann dieses Kommando ausführen
+}
+
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {

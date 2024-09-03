@@ -1,5 +1,6 @@
 package com.tyler.narutoorigin.coremod;
 
+import com.tyler.narutoorigin.config.NarutoOriginsConfig;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -28,10 +29,12 @@ public class CommandMakeMeAShinobi extends CommandBase {
         return "/makeMeAShinobi";
     }
 
-    @Override
+      @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         String playerName = sender.getName();
-        PlayerData playerData = playerDataManager.getPlayerData(playerName);
+        // Hole den Welt-Namen vom Server
+        String worldName = ((EntityPlayerMP) sender).getServerWorld().getWorldInfo().getWorldName();
+        PlayerData playerData = playerDataManager.getPlayerData(playerName, worldName);
 
         if (playerData.hasUsedMakeMeAShinobi()) {
             sender.sendMessage(new TextComponentString("You have already used this command!"));
@@ -90,8 +93,9 @@ public class CommandMakeMeAShinobi extends CommandBase {
         return true; // Allows any player to execute the command
     }
 
-    @Override
-    public int getRequiredPermissionLevel() {
-        return 0; // Sets the required permission level to 0, meaning no admin rights are required
-    }
+   @Override
+public int getRequiredPermissionLevel() {
+    return 0; // Jeder kann dieses Kommando ausführen
+}
+
 }

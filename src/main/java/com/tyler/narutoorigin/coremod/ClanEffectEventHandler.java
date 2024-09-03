@@ -1,10 +1,9 @@
 package com.tyler.narutoorigin.coremod;
 
-import com.tyler.narutoorigin.coremod.ClanEffectManager;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ClanEffectEventHandler {
 
@@ -25,10 +24,14 @@ public class ClanEffectEventHandler {
     }
 
     private void applyEffects(EntityPlayerMP player) {
-        PlayerData playerData = playerDataManager.getPlayerData(player.getName());
+    String worldName = player.getServerWorld().getWorldInfo().getWorldName();
+    PlayerData playerData = playerDataManager.getPlayerData(player.getName(), worldName);
 
-        if (playerData.hasClaimedOrigin()) {
-            ClanEffectManager.applyEffectsBasedOnClan(player, playerData.getClan());
-        }
+    if (playerData.hasClaimedOrigin()) {
+        ClanEffectManager.applyEffectsBasedOnClan(player, playerData.getClan());
+    } else {
+        ClanEffectManager.removeEffectsBasedOnClan(player);
     }
+}
+
 }

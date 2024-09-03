@@ -11,12 +11,24 @@ public class NarutoOriginsConfig {
     public static float medicProbability;
     public static float senjuWoodKKGProbability;
     public static float rinneganProbability;
+    public static float otsusukiByakuganProbability;
+    public static float otsusukiSharinganProbability;
+    public static float otsusukiRinneganProbability;
+    public static boolean onlyDojutsuNoKKG;
+    public static int maxSimulations;
+    public static int simulatePermissionLevel;
+    public static int resetMePermissionLevel;
+    public static int makeMeAShinobiPermissionLevel;
     public static int doItForMePermissionLevel;
-    public static int maxSimulations; // New variable for the maximum number of simulations
+
+    // Add these new fields
+    public static float Jutsu_XP_MULTI;
+    public static float Ninja_XP_MULTI;
 
     private static final String CATEGORY_PROBABILITIES = "Probabilities";
-    private static final String CATEGORY_PERMISSIONS = "Permissions";
-    private static final String CATEGORY_LIMITS = "Limits"; // New category for limits
+    private static final String CATEGORY_OTSUSUKI = "Otsusuki Probabilities";
+    private static final String CATEGORY_SIMULATIONS = "Simulations";
+    private static final String CATEGORY_SETTINGS = "Settings";
 
     public static void init(FMLPreInitializationEvent event) {
         File directory = event.getModConfigurationDirectory();
@@ -34,15 +46,25 @@ public class NarutoOriginsConfig {
         rinneganProbability = config.getFloat("rinnegan", CATEGORY_PROBABILITIES, 0.01f, 0.0f, 1.0f,
                 "Probability of a player obtaining the Rinnegan (1% chance by default)");
 
-        // New configuration option for the maximum number of simulations
+        otsusukiByakuganProbability = config.getFloat("otsusukiByakugan", CATEGORY_OTSUSUKI, 0.90f, 0.0f, 1.0f,
+                "Probability of an Otsusuki player obtaining the Byakugan (90% chance by default)");
+        otsusukiSharinganProbability = config.getFloat("otsusukiSharingan", CATEGORY_OTSUSUKI, 0.05f, 0.0f, 1.0f,
+                "Probability of an Otsusuki player obtaining the Sharingan (5% chance by default)");
+        otsusukiRinneganProbability = config.getFloat("otsusukiRinnegan", CATEGORY_OTSUSUKI, 0.05f, 0.0f, 1.0f,
+                "Probability of an Otsusuki player obtaining the Rinnegan (5% chance by default)");
+
+        onlyDojutsuNoKKG = config.getBoolean("onlyDojutsuNoKKG", CATEGORY_SETTINGS, false,
+                "If true, players with a Dojutsu will not receive a KKG");
+
         maxSimulations = config.getInt(
-            "maxSimulations",              // Name of the configuration option
-            CATEGORY_LIMITS,               // Category under which this option is stored
-            3,                             // Default value: Number of allowed simulations if not specified otherwise
-            1,                             // Minimum value: The lowest allowed number of simulations
-            10,                            // Maximum value: The highest allowed number of simulations
-            "Maximum number of times a player can use the /simulate command" // Description of the configuration option
+            "maxSimulations",
+            CATEGORY_SIMULATIONS,
+            3,
+            1,
+            8,
+            "Maximum number of times a player can use the /simulate command"
         );
+
 
         if (config.hasChanged()) {
             config.save();

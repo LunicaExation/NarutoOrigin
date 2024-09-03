@@ -1,6 +1,5 @@
 package com.tyler.narutoorigin.coremod;
 
-import com.tyler.narutoorigin.coremod.ClanEffectManager;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -32,7 +31,8 @@ public class CommandClaimOrigin extends CommandBase {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws WrongUsageException {
         String playerName = sender.getName();
-        PlayerData playerData = playerDataManager.getPlayerData(playerName);
+        String worldName = ((EntityPlayerMP) sender).getServerWorld().getWorldInfo().getWorldName();
+        PlayerData playerData = playerDataManager.getPlayerData(playerName, worldName);
 
         if (playerData.hasClaimedOrigin()) {
             sender.sendMessage(new TextComponentString(TextFormatting.RED + "You have already claimed an Origin."));
@@ -56,6 +56,14 @@ public class CommandClaimOrigin extends CommandBase {
             return;
         }
 
+        claimOrigin((EntityPlayerMP) sender, claimData, playerDataManager, simulateCommand);
+    }
+
+    public static void claimOrigin(EntityPlayerMP player, String[] claimData, PlayerDataManager playerDataManager, CommandSimulate commandSimulate) {
+        String playerName = player.getName();
+        String worldName = player.getServerWorld().getWorldInfo().getWorldName();
+        PlayerData playerData = playerDataManager.getPlayerData(playerName, worldName);
+
         // Save the Clan and KKG data in PlayerData
         playerData.setClan(claimData[0]);
         playerData.setKkg(claimData[3]);
@@ -66,40 +74,40 @@ public class CommandClaimOrigin extends CommandBase {
         playerDataManager.savePlayerData(playerData);
 
         // Apply Clan Effects using ClanEffectManager
-        EntityPlayerMP player = server.getPlayerList().getPlayerByUsername(playerData.getName());
-        if (player != null) {
-            ClanEffectManager.applyEffectsBasedOnClan(player, playerData.getClan());
-        }
+        ClanEffectManager.applyEffectsBasedOnClan(player, playerData.getClan());
 
         // Automatically execute related claims
-        if (!claimData[3].equals("no KKG")) {
-            executeServerCommand(server, sender, "/playerClick executeKKG " + playerName + " " + claimData[3]);
-        }
+        MinecraftServer server = player.getServer();
+        if (server != null) {
+            if (!claimData[3].equals("no KKG")) {
+                executeServerCommand(server, player, "/playerClick executeKKG " + playerName + " " + claimData[3]);
+            }
 
-        if (!claimData[1].equals("no Dojutsu")) {
-            executeServerCommand(server, sender, "/playerClick executeDojutsu " + playerName + " " + claimData[1]);
-        }
+            if (!claimData[1].equals("no Dojutsu")) {
+                executeServerCommand(server, player, "/playerClick executeDojutsu " + playerName + " " + claimData[1]);
+            }
 
-        if (!claimData[2].equals("no Element")) {
-            executeServerCommand(server, sender, "/playerClick executeElement " + playerName + " " + claimData[2].toLowerCase());
-        }
+            if (!claimData[2].equals("no Element")) {
+                executeServerCommand(server, player, "/playerClick executeElement " + playerName + " " + claimData[2].toLowerCase());
+            }
 
-        if (!claimData[5].equals("no Medic")) {
-            executeServerCommand(server, sender, "/playerClick executeMedic " + playerName);
-        }
+            if (!claimData[5].equals("no Medic")) {
+                executeServerCommand(server, player, "/playerClick executeMedic " + playerName);
+            }
 
-        if (claimData[0].equals("Lee") && !claimData[4].isEmpty()) {
-            executeServerCommand(server, sender, "/playerClick executeTaijutsu " + playerName);
-        }
+            if (claimData[0].equals("Lee") && !claimData[4].isEmpty()) {
+                executeServerCommand(server, player, "/playerClick executeTaijutsu " + playerName);
+            }
 
-        if (!claimData[6].isEmpty()) {
-            executeServerCommand(server, sender, "/playerClick executeTailedBeast " + playerName + " " + claimData[6]);
-        }
+            if (!claimData[6].isEmpty()) {
+                executeServerCommand(server, player, "/playerClick executeTailedBeast " + playerName + " " + claimData[6]);
+            }
 
-        sender.sendMessage(new TextComponentString(TextFormatting.GREEN + "You have claimed your Origin successfully."));
+            player.sendMessage(new TextComponentString(TextFormatting.GREEN + "You have claimed your Origin successfully."));
+        }
     }
 
-    private void executeServerCommand(MinecraftServer server, ICommandSender sender, String command) {
+    private static void executeServerCommand(MinecraftServer server, ICommandSender sender, String command) {
         server.getCommandManager().executeCommand(sender, command);
     }
 

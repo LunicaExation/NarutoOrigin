@@ -14,9 +14,9 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.10.90'
+version = '1.11.78'
 group = 'com.example.narutorigins'
-archivesBaseName = 'NarutoOriginMod'
+archivesBaseName = 'NarutoOriginModSP'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
@@ -48,6 +48,8 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2859'
     // NarutoMod dependency
     implementation files('libs/NarutoMod-1.12.2-0.3.0.beta.jar')
+    // SpringAddon dependency
+    implementation files('libs/SpringAddon6.1.jar')
 }
 
 jar {

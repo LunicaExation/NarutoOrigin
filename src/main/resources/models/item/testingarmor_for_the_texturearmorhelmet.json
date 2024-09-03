@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "narutoorigin:items/testingarmor_for_the_texture_head"
+  }
+}

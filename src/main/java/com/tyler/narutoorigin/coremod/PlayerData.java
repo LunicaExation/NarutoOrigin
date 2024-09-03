@@ -3,27 +3,26 @@ package com.tyler.narutoorigin.coremod;
 import java.io.Serializable;
 
 public class PlayerData implements Serializable {
-    private static final long serialVersionUID = 1L;
     private boolean hasClaimedOrigin;
     private boolean hasUsedMakeMeAShinobi;
-    private String name;    // Property to store the player's name
-    private String clan;    // Property to store the player's clan
+    private String name;
+    private String worldName;
+    private String clan;
     private String kkg;
     private String dojutsu;
 
-    // Constructor with name parameter
-    public PlayerData(String name) {
+    public PlayerData(String name, String worldName) {
         this.hasClaimedOrigin = false;
         this.hasUsedMakeMeAShinobi = false;
         this.name = name;
+        this.worldName = worldName;
         this.clan = "";
         this.kkg = "";
         this.dojutsu = "";
     }
 
-    // Default constructor (if needed)
     public PlayerData() {
-        this("");
+        this("", "");
     }
 
     public boolean hasClaimedOrigin() {
@@ -48,6 +47,14 @@ public class PlayerData implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getWorldName() {
+        return worldName;
+    }
+
+    public void setWorldName(String worldName) {
+        this.worldName = worldName;
     }
 
     public String getClan() {

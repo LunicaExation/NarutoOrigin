@@ -1,7 +1,11 @@
 package com.tyler.narutoorigin.coremod;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import net.minecraft.server.MinecraftServer;
+
 import java.io.*;
+import java.lang.reflect.Type;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,45 +15,45 @@ public class PlayerDataManager {
     private Map<String, PlayerData> playerDataMap;
 
     public PlayerDataManager(MinecraftServer server) {
-        // Get the current world's directory
         File worldDirectory = server.getWorld(0).getSaveHandler().getWorldDirectory();
-
-        // Create the "NarutoOrigins" folder in the current world directory
         File narutoOriginsDir = new File(worldDirectory, "NarutoOrigins");
         if (!narutoOriginsDir.exists()) {
-            narutoOriginsDir.mkdirs(); // Create the folder if it doesn't exist
+            narutoOriginsDir.mkdirs();
         }
-
-        // Set the path to the "playerDataNarutoOrigins.dat" file in the "NarutoOrigins" folder
-        this.filePath = Paths.get(narutoOriginsDir.getPath(), "playerDataNarutoOrigins.dat").toString();
+        this.filePath = Paths.get(narutoOriginsDir.getPath(), "playerDataNarutoOrigins.json").toString();
         playerDataMap = new HashMap<>();
         loadPlayerData();
     }
 
-    public PlayerData getPlayerData(String playerName) {
-        return playerDataMap.computeIfAbsent(playerName, k -> new PlayerData(playerName));
+    public PlayerData getPlayerData(String playerName, String worldName) {
+        return playerDataMap.computeIfAbsent(playerName + ":" + worldName, k -> new PlayerData(playerName, worldName));
     }
 
     public void savePlayerData(PlayerData playerData) {
-        playerDataMap.put(playerData.getName(), playerData);
+        playerDataMap.put(playerData.getName() + ":" + playerData.getWorldName(), playerData);
         saveAllPlayerData();
     }
 
     private void saveAllPlayerData() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
-            oos.writeObject(playerDataMap);
+        Gson gson = new Gson();
+        try (Writer writer = new FileWriter(filePath)) {
+            gson.toJson(playerDataMap, writer);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    @SuppressWarnings("unchecked")
     private void loadPlayerData() {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
-            playerDataMap = (Map<String, PlayerData>) ois.readObject();
+        Gson gson = new Gson();
+        try (Reader reader = new FileReader(filePath)) {
+            Type type = new TypeToken<Map<String, PlayerData>>() {}.getType();
+            playerDataMap = gson.fromJson(reader, type);
+            if (playerDataMap == null) {
+                playerDataMap = new HashMap<>();
+            }
         } catch (FileNotFoundException e) {
             playerDataMap = new HashMap<>();
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
